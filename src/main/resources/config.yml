@@ -1,0 +1,8 @@
+mongo:
+  host: ds159707.mlab.com:59707
+  user: admin
+  database: zskyblock
+  password: ZNbsMf6QQ
+  shop_collection: zs_shop
+  npc_collection: zs_npc
+

@@ -1,0 +1,5 @@
+name: ShopManager
+main: net.whitewalker.shopmanager.domain.Main
+version: 1.0
+depend: [RayzeCore]
+softdepend: [Vault]
