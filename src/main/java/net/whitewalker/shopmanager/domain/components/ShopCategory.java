@@ -2,14 +2,15 @@ package net.whitewalker.shopmanager.domain.components;
 
 import net.rayze.core.spigot.member.Member;
 import net.rayze.core.spigot.menu.Menu;
-import net.rayze.core.spigot.menu.MenuCloseStrategy;
 import net.rayze.core.spigot.menu.MenuSize;
 import net.rayze.core.spigot.menu.SimpleMenuElement;
 import net.rayze.core.spigot.utils.ItemBuilder;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ShopCategory extends ShopComponent implements IComponentContainer {
 
@@ -61,7 +62,7 @@ public class ShopCategory extends ShopComponent implements IComponentContainer {
             subMenu.destroy();
         }
         subMenu = new Menu(title, menuSize);
-        MenuCloseStrategy subCloseStrategy = pl -> subMenu.open(pl);
+        Consumer<Player> subCloseStrategy = pl -> subMenu.open(pl);
 
         categoryItems.stream().filter(ShopComponent::isValidComponent).forEach(shopComponent -> {
             shopComponent.setCloseStrategy(subCloseStrategy);

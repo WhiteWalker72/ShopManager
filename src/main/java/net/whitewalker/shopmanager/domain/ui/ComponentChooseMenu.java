@@ -11,14 +11,16 @@ import net.whitewalker.shopmanager.domain.components.ShopCategoryItem;
 import net.whitewalker.shopmanager.domain.components.ShopComponent;
 import net.whitewalker.shopmanager.utils.Chat;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class ComponentChooseMenu extends DynamicMenu {
 
-    public ComponentChooseMenu(int index, IComponentContainer compContainer, MenuUpdateStrategy updateStrategy) {
+    public ComponentChooseMenu(int index, IComponentContainer compContainer, Consumer<Player> updateStrategy) {
         super(Chat.MENU_TITLE + "Choose menu", MenuSize.THREE_LINE);
 
         setElement(11, new SimpleMenuElement(new ItemBuilder(Material.IRON_INGOT).setName(Chat.MENU_ITEM + "Item").build()) {
@@ -26,7 +28,7 @@ public class ComponentChooseMenu extends DynamicMenu {
             public boolean onClick(Member member, ClickType click) {
                 ShopComponent component = new ShopCategoryItem(index, new ItemStack(Material.DIRT), -1, -1);
                 compContainer.getComponents().add(component);
-                updateStrategy.onUpdate(member.getPlayer());
+                updateStrategy.accept(member.getPlayer());
                 return true;
             }
         });
@@ -36,7 +38,7 @@ public class ComponentChooseMenu extends DynamicMenu {
             public boolean onClick(Member member, ClickType click) {
                 ShopComponent component = new ShopCategory(index, new ItemStack(Material.DIRT), new ArrayList<>(), MenuSize.THREE_LINE);
                 compContainer.getComponents().add(component);
-                updateStrategy.onUpdate(member.getPlayer());
+                updateStrategy.accept(member.getPlayer());
                 return true;
             }
         });

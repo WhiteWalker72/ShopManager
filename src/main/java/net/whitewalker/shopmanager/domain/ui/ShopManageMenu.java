@@ -2,7 +2,6 @@ package net.whitewalker.shopmanager.domain.ui;
 
 import net.rayze.core.spigot.member.Member;
 import net.rayze.core.spigot.menu.DynamicMenu;
-import net.rayze.core.spigot.menu.MenuCloseStrategy;
 import net.rayze.core.spigot.menu.MenuSize;
 import net.rayze.core.spigot.menu.SimpleMenuElement;
 import net.rayze.core.spigot.utils.ItemBuilder;
@@ -18,15 +17,16 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ShopManageMenu extends DynamicMenu {
 
     ShopManageMenu(MenuSize menuSize, IComponentContainer compContainer) {
         super(Chat.MENU_TITLE + "Manage menu", menuSize);
-        MenuCloseStrategy subCloseStrategy = pl -> reOpen(menuSize, compContainer, pl);
+        Consumer<Player> subCloseStrategy = pl -> reOpen(menuSize, compContainer, pl);
 
         Map<SimpleMenuElement, Integer> elementMap = new HashMap<>();
-        MenuUpdateStrategy strategy = (player) -> reOpen(menuSize, compContainer, player);
+        Consumer<Player> strategy = (player) -> reOpen(menuSize, compContainer, player);
 
         for (int i = 0; i < getSize().getSize(); i++) {
             SimpleMenuElement element = new SimpleMenuElement(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 15))

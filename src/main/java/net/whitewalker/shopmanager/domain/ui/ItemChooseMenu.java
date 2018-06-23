@@ -2,7 +2,6 @@ package net.whitewalker.shopmanager.domain.ui;
 
 import net.rayze.core.spigot.member.Member;
 import net.rayze.core.spigot.menu.DynamicMenu;
-import net.rayze.core.spigot.menu.MenuCloseStrategy;
 import net.rayze.core.spigot.menu.MenuSize;
 import net.rayze.core.spigot.menu.SimpleMenuElement;
 import net.rayze.core.spigot.menu.anvil.AnvilGUI;
@@ -13,11 +12,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.function.Consumer;
+
 public class ItemChooseMenu extends DynamicMenu {
 
     ItemChooseMenu(ItemSelectAction selectAction) {
         super(Chat.MENU_TITLE + "Choose menu", MenuSize.THREE_LINE);
-        MenuCloseStrategy closeStrategy = pl -> reOpen(pl, selectAction);
+        Consumer<Player> closeStrategy = pl -> reOpen(pl, selectAction);
 
         setElement(10, new SimpleMenuElement(new ItemBuilder(Material.BOOK_AND_QUILL).setName(Chat.MENU_ITEM + "Search menu").addLore(Chat.MENU_LORE_PRIM + "<Click> §fto search for an item").build()) {
             @Override

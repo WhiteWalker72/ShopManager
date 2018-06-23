@@ -1,26 +1,28 @@
 package net.whitewalker.shopmanager.domain.components;
 
 import net.rayze.core.spigot.member.Member;
-import net.rayze.core.spigot.menu.MenuCloseStrategy;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Consumer;
 
 public abstract class ShopComponent {
 
     private int index;
     private ItemStack item;
-    private MenuCloseStrategy closeStrategy;
+    private Consumer<Player> closeStrategy;
 
     public ShopComponent(int index, ItemStack item) {
         this.index = index;
         this.item = item;
     }
 
-    public MenuCloseStrategy getCloseStrategy() {
+    public Consumer<Player> getCloseStrategy() {
         return closeStrategy;
     }
 
-    public void setCloseStrategy(MenuCloseStrategy closeStrategy) {
+    public void setCloseStrategy(Consumer<Player> closeStrategy) {
         this.closeStrategy = closeStrategy;
     }
 

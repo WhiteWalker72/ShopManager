@@ -4,7 +4,6 @@ import net.rayze.core.spigot.commands.base.SubCommand;
 import net.rayze.core.spigot.member.Member;
 import net.rayze.core.spigot.menu.DynamicMenu;
 import net.rayze.core.spigot.menu.Menu;
-import net.rayze.core.spigot.menu.MenuCloseStrategy;
 import net.rayze.core.spigot.menu.SimpleMenuElement;
 import net.rayze.core.spigot.utils.ItemBuilder;
 import net.whitewalker.shopmanager.domain.components.Shop;
@@ -14,14 +13,15 @@ import net.whitewalker.shopmanager.domain.components.ShopComponent;
 import net.whitewalker.shopmanager.domain.ui.ComponentChooseMenu;
 import net.whitewalker.shopmanager.domain.ui.EditCategoryItemMenu;
 import net.whitewalker.shopmanager.domain.ui.EditCategoryMenu;
-import net.whitewalker.shopmanager.domain.ui.MenuUpdateStrategy;
 import net.whitewalker.shopmanager.utils.Chat;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 
 public class ManageShopCommand extends SubCommand<ShopCommand> {
@@ -35,7 +35,7 @@ public class ManageShopCommand extends SubCommand<ShopCommand> {
         final String shopName = args[0];
         if (!getCommand().shopExistsTest(member, shopName))
             return;
-        MenuCloseStrategy closeStrategy = pl -> execute(member, label, args);
+        Consumer<Player> closeStrategy = pl -> execute(member, label, args);
 
         Shop shop = getCommand().getShopManager().getShop(shopName);
 
@@ -45,7 +45,7 @@ public class ManageShopCommand extends SubCommand<ShopCommand> {
         });
         Map<SimpleMenuElement, Integer> elementMap = new HashMap<>();
 
-        MenuUpdateStrategy updateStrategy = player -> execute(member, label, args);
+        Consumer<Player> updateStrategy = player -> execute(member, label, args);
 
         for (int i = 0; i < menu.getSize().getSize(); i++) {
             SimpleMenuElement element = new SimpleMenuElement(new ItemBuilder(new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 15))

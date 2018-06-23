@@ -10,15 +10,17 @@ import net.whitewalker.shopmanager.domain.components.IComponentContainer;
 import net.whitewalker.shopmanager.domain.components.ShopCategory;
 import net.whitewalker.shopmanager.utils.Chat;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EditCategoryMenu extends EditComponentMenu {
 
     private final ShopCategory shopCategory;
 
-    public EditCategoryMenu(ShopCategory component, IComponentContainer compContainer, MenuUpdateStrategy updateStrategy) {
+    public EditCategoryMenu(ShopCategory component, IComponentContainer compContainer, Consumer<Player> updateStrategy) {
         super(component, compContainer, updateStrategy);
         this.shopCategory = component;
     }

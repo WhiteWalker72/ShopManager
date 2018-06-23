@@ -19,19 +19,20 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class EditComponentMenu {
 
     private final ShopComponent component;
     private final IComponentContainer compContainer;
-    private final MenuUpdateStrategy updateStrategy;
+    private final Consumer<Player> updateStrategy;
 
-    private MenuCloseStrategy closeStrat;
-    protected final MenuCloseStrategy subCloseStrategy;
+    private Consumer<Player> closeStrat;
+    protected final Consumer<Player> subCloseStrategy;
     protected Menu menu;
 
-    EditComponentMenu(ShopComponent component, IComponentContainer compContainer, MenuUpdateStrategy updateStrategy) {
+    EditComponentMenu(ShopComponent component, IComponentContainer compContainer, Consumer<Player> updateStrategy) {
         this.component = component;
         this.compContainer = compContainer;
         this.updateStrategy = updateStrategy;
@@ -42,7 +43,7 @@ public class EditComponentMenu {
         openMenu(member.getPlayer());
     }
 
-    public EditComponentMenu withCloseStrat(MenuCloseStrategy closeStrat) {
+    public EditComponentMenu withCloseStrat(Consumer<Player> closeStrat) {
         this.closeStrat = closeStrat;
         return this;
     }
@@ -88,7 +89,7 @@ public class EditComponentMenu {
                     compContainer.updateItems();
 
                     member.message("§7Component deleted.");
-                    updateStrategy.onUpdate(member.getPlayer());
+                    updateStrategy.accept(member.getPlayer());
                     return true;
                 }
                 return false;
@@ -131,7 +132,7 @@ public class EditComponentMenu {
             @Override
             public boolean onClick(Member member, ClickType click) {
                 compContainer.updateItems();
-                updateStrategy.onUpdate(member.getPlayer());
+                updateStrategy.accept(member.getPlayer());
                 return true;
             }
         });
