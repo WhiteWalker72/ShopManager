@@ -6,11 +6,16 @@ import net.rayze.core.spigot.utils.ItemUtils;
 import net.rayze.core.utils.MathUtils;
 import net.whitewalker.shopmanager.domain.ShopServices;
 import net.whitewalker.shopmanager.domain.events.PlayerItemBuyEvent;
+import net.whitewalker.shopmanager.domain.ui.EditCategoryItemMenu;
+import net.whitewalker.shopmanager.domain.ui.EditComponentMenu;
 import net.whitewalker.shopmanager.utils.Chat;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.function.Consumer;
 
 public class ShopCategoryItem extends ShopComponent {
 
@@ -66,6 +71,16 @@ public class ShopCategoryItem extends ShopComponent {
         member.message("§7" + amount + " " + Chat.PRIM + ItemUtils.getName(getItem()) + "§7 bought for " + Chat.PRIM + "$" + buyCost + "§7.");
         Bukkit.getPluginManager().callEvent(new PlayerItemBuyEvent(member.getPlayer(), bought, buyCost));
         return true;
+    }
+
+    @Override
+    public EditComponentMenu getEditMenu(IComponentContainer container, Consumer<Player> updateStrategy) {
+        return new EditCategoryItemMenu(this, container, updateStrategy);
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Category Item";
     }
 
     private double getCost(int amount) {

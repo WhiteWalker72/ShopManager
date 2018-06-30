@@ -30,8 +30,6 @@ public class Shop implements IComponentContainer {
         this.permission = permission;
         this.menuSize = menuSize;
         this.shopComponents = shopComponents;
-
-
         updateItems();
     }
 
@@ -48,7 +46,7 @@ public class Shop implements IComponentContainer {
             if (!shopComponent.isValidComponent()) {
                 continue;
             }
-            shopComponent.setCloseStrategy(pl -> open(pl));
+            shopComponent.setCloseStrategy(this::open);
 
             shopMenu.setElement(shopComponent.getIndex(), new SimpleMenuElement(shopComponent.getItemWithShopLore()) {
                 @Override

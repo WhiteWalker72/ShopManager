@@ -3,15 +3,13 @@ package net.whitewalker.shopmanager.persistence;
 import net.rayze.core.services.MongoDB;
 import net.rayze.core.spigot.menu.MenuSize;
 import net.rayze.core.spigot.utils.ItemUtils;
-import net.whitewalker.shopmanager.domain.components.Shop;
-import net.whitewalker.shopmanager.domain.components.ShopCategory;
-import net.whitewalker.shopmanager.domain.components.ShopCategoryItem;
-import net.whitewalker.shopmanager.domain.components.ShopComponent;
+import net.whitewalker.shopmanager.domain.components.*;
 import org.bson.Document;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShopDAOMongoImpl extends DAOMongoImpl<Shop> {
 
@@ -50,15 +48,34 @@ public class ShopDAOMongoImpl extends DAOMongoImpl<Shop> {
         int index = doc.getInteger("index");
         ItemStack item = ItemUtils.fromDocument((Document) doc.get("item"));
 
+        String typeName = doc.getString("type_name");
+        switch (typeName.toLowerCase()) {
+            case "category item": {
+                double cost = doc.getDouble("cost");
+                return new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost/3);
+            }
+            case "category" : {
+                return new ShopCategory(index, item, getComponents(doc), doc.containsKey("menu_size") ? MenuSize.getSize(doc.getString("menu_size")) : MenuSize.THREE_LINE);
+            }
+
+            case "multimenu": {
+                return new ShopMultiMenu(index, item, getComponents(doc));
+            }
+        }
+
+        double cost = doc.getDouble("cost");
+        return new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost/3);
+    }
+
+    private List<ShopComponent> getComponents(Document doc) {
         if (doc.containsKey("components")) {
             List<ShopComponent> subComponents = new ArrayList<>();
             for (Document compDoc : ((List<Document>) doc.get("components"))) {
                 subComponents.add(getComponentFromDoc(compDoc));
             }
-            return new ShopCategory(index, item, subComponents, doc.containsKey("menu_size") ? MenuSize.getSize(doc.getString("menu_size")) : MenuSize.THREE_LINE);
+            return subComponents;
         }
-        double cost = doc.getDouble("cost");
-        return new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost/3);
+        return new ArrayList<>();
     }
 
     @Override
@@ -80,21 +97,26 @@ public class ShopDAOMongoImpl extends DAOMongoImpl<Shop> {
 
     private Document componentToDoc(ShopComponent comp) {
         Document compDoc = new Document("index", comp.getIndex());
+        compDoc.put("type_name", comp.getTypeName());
         compDoc.put("item", ItemUtils.toDocument(comp.getItem()));
 
         if (comp instanceof ShopCategory) {
             ShopCategory shopComp = (ShopCategory) comp;
             compDoc.put("menu_size", shopComp.getMenuSize().toString());
-
-            List<Document> components = new ArrayList<>();
-            shopComp.getComponents().forEach(item -> components.add(componentToDoc(item)));
-            compDoc.put("components", components);
+            compDoc.put("components", shopComp.getComponents().stream().map(this::componentToDoc).collect(Collectors.toList()));
             return compDoc;
         }
 
         if (comp instanceof ShopCategoryItem) {
             compDoc.put("cost", ((ShopCategoryItem) comp).getCost());
         }
+
+        if (comp instanceof ShopMultiMenu) {
+            ShopMultiMenu shopComp = (ShopMultiMenu) comp;
+            compDoc.put("components", shopComp.getComponents().stream().map(this::componentToDoc).collect(Collectors.toList()));
+            return compDoc;
+        }
+
         return compDoc;
     }
 

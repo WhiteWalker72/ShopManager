@@ -26,6 +26,7 @@ public class EditCategoryItemMenu extends EditComponentMenu {
     @Override
     public void constructMenu() {
         super.constructMenu();
+
         menu.setElement(3, new SimpleMenuElement(new ItemBuilder(Material.DIAMOND).setName(Chat.MENU_ITEM + "Item Cost").addLore(Chat.MENU_LORE_PRIM + "<Click> §fto set the item shop value").build()) {
             @Override
             public boolean onClick(Member member, ClickType click) {

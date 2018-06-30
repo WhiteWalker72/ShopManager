@@ -4,7 +4,8 @@ import net.rayze.core.spigot.member.Member;
 import net.rayze.core.spigot.menu.Menu;
 import net.rayze.core.spigot.menu.MenuSize;
 import net.rayze.core.spigot.menu.SimpleMenuElement;
-import net.rayze.core.spigot.utils.ItemBuilder;
+import net.whitewalker.shopmanager.domain.ui.EditCategoryMenu;
+import net.whitewalker.shopmanager.domain.ui.EditComponentMenu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -15,8 +16,8 @@ import java.util.function.Consumer;
 public class ShopCategory extends ShopComponent implements IComponentContainer {
 
     private Menu subMenu;
-    private String title;
-    private List<ShopComponent> categoryItems;
+    private final String title;
+    private final List<ShopComponent> categoryItems;
     private MenuSize menuSize;
 
     public ShopCategory(int index, ItemStack item, List<ShopComponent> categoryItems, MenuSize menuSize) {
@@ -25,11 +26,6 @@ public class ShopCategory extends ShopComponent implements IComponentContainer {
         this.categoryItems = categoryItems;
         this.menuSize = menuSize;
         updateItems();
-    }
-
-    @Override
-    public ItemStack getItemWithManageLore() {
-        return new ItemBuilder(getItem().clone()).addLore("§7Type: category").build();
     }
 
     @Override
@@ -49,6 +45,16 @@ public class ShopCategory extends ShopComponent implements IComponentContainer {
         }
         subMenu.open(member);
         return true;
+    }
+
+    @Override
+    public EditComponentMenu getEditMenu(IComponentContainer container, Consumer<Player> updateStrategy) {
+        return new EditCategoryMenu(this, container, updateStrategy);
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Category";
     }
 
     @Override

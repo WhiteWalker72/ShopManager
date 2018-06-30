@@ -5,10 +5,7 @@ import net.rayze.core.spigot.menu.DynamicMenu;
 import net.rayze.core.spigot.menu.MenuSize;
 import net.rayze.core.spigot.menu.SimpleMenuElement;
 import net.rayze.core.spigot.utils.ItemBuilder;
-import net.whitewalker.shopmanager.domain.components.IComponentContainer;
-import net.whitewalker.shopmanager.domain.components.ShopCategory;
-import net.whitewalker.shopmanager.domain.components.ShopCategoryItem;
-import net.whitewalker.shopmanager.domain.components.ShopComponent;
+import net.whitewalker.shopmanager.domain.components.*;
 import net.whitewalker.shopmanager.utils.Chat;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -23,7 +20,6 @@ public class ShopManageMenu extends DynamicMenu {
 
     ShopManageMenu(MenuSize menuSize, IComponentContainer compContainer) {
         super(Chat.MENU_TITLE + "Manage menu", menuSize);
-        Consumer<Player> subCloseStrategy = pl -> reOpen(menuSize, compContainer, pl);
 
         Map<SimpleMenuElement, Integer> elementMap = new HashMap<>();
         Consumer<Player> strategy = (player) -> reOpen(menuSize, compContainer, player);
@@ -33,7 +29,7 @@ public class ShopManageMenu extends DynamicMenu {
                     .setName(Chat.MENU_ITEM + "New component").addLore(Chat.MENU_LORE_PRIM + "<Click> §fto add a new component").build()) {
                 @Override
                 public boolean onClick(Member member, ClickType click) {
-                    new ComponentChooseMenu(elementMap.get(this), compContainer, strategy).withCloseStrategy(subCloseStrategy).open(member);
+                    new ComponentChooseMenu(elementMap.get(this), compContainer, strategy).withCloseStrategy(strategy).open(member);
                     return true;
                 }
             };
@@ -43,29 +39,13 @@ public class ShopManageMenu extends DynamicMenu {
         }
 
         for (ShopComponent shopComponent : compContainer.getComponents()) {
-            if (shopComponent instanceof ShopCategory) {
-                ItemBuilder builder = new ItemBuilder(shopComponent.getItemWithManageLore());
-                builder.addLore(Chat.MENU_LORE_PRIM + "<Click> §fto edit category");
-
-                setElement(shopComponent.getIndex(), new SimpleMenuElement(builder.build()) {
-                    @Override
-                    public boolean onClick(Member member, ClickType click) {
-                        new EditCategoryMenu((ShopCategory) shopComponent, compContainer, strategy).withCloseStrat(subCloseStrategy).open(member);
-                        return true;
-                    }
-                });
-            } else {
-                ItemBuilder builder = new ItemBuilder(shopComponent.getItemWithManageLore());
-                builder.addLore(Chat.MENU_LORE_PRIM + "<Click> §fto edit item");
-
-                setElement(shopComponent.getIndex(), new SimpleMenuElement(builder.build()) {
-                    @Override
-                    public boolean onClick(Member member, ClickType click) {
-                        new EditCategoryItemMenu((ShopCategoryItem) shopComponent, compContainer, strategy).withCloseStrat(subCloseStrategy).open(member);
-                        return true;
-                    }
-                });
-            }
+            setElement(shopComponent.getIndex(), new SimpleMenuElement(shopComponent.getItemWithManageLore()) {
+                @Override
+                public boolean onClick(Member member, ClickType click) {
+                    shopComponent.getEditMenu(compContainer, strategy).withCloseStrat(strategy).open(member);
+                    return true;
+                }
+            });
         }
     }
 
