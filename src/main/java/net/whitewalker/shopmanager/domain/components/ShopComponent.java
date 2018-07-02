@@ -2,7 +2,9 @@ package net.whitewalker.shopmanager.domain.components;
 
 import net.rayze.core.spigot.member.Member;
 import net.rayze.core.spigot.utils.ItemBuilder;
+import net.rayze.core.spigot.utils.ItemUtils;
 import net.whitewalker.shopmanager.domain.ui.EditComponentMenu;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +44,13 @@ public abstract class ShopComponent {
 
     public ItemStack getItemWithManageLore() {
         return new ItemBuilder(getItem().clone()).addLore("§7Type: " + getTypeName()).build();
+    }
+
+    public String getName() {
+        if (ItemUtils.hasDisplayName(getItem())) {
+            return ChatColor.stripColor(getItem().getItemMeta().getDisplayName());
+        }
+        return null;
     }
 
     public abstract ItemStack getItemWithShopLore();

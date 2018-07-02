@@ -10,7 +10,7 @@ import net.whitewalker.shopmanager.utils.Chat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateShopCommand extends SubCommand<ShopCommand> {
+class CreateShopCommand extends SubCommand<ShopCommand> {
 
     CreateShopCommand(ShopCommand command) {
         super(command, "Create a new shop", "<shopname> <size> [permission]", "sr_mod", "create");

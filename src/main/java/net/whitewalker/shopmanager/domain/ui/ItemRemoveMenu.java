@@ -49,9 +49,7 @@ class ItemRemoveMenu extends DynamicMultiMenu {
 
     private void reOpen(ShopMultiMenu compContainer, List<IMenuElement> elements, Player player) {
         this.destroy();
-        if (!elements.isEmpty()) {
-            new ItemRemoveMenu(compContainer, elements).withCloseStrategy(closeStrategy).open(player);
-        }
+        new ItemRemoveMenu(compContainer, elements).withCloseStrategy(closeStrategy).open(player);
     }
 
 }

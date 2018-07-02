@@ -6,7 +6,7 @@ import net.whitewalker.shopmanager.domain.components.Shop;
 import net.whitewalker.shopmanager.domain.ShopManager;
 import net.whitewalker.shopmanager.utils.Chat;
 
-public class RenameShopCommand extends SubCommand<ShopCommand> {
+class RenameShopCommand extends SubCommand<ShopCommand> {
 
     RenameShopCommand(ShopCommand command) {
         super(command, "Rename a shop", "<shop> <newname>", "sr_mod", "rename");
@@ -26,9 +26,8 @@ public class RenameShopCommand extends SubCommand<ShopCommand> {
             return;
         }
 
-        shopManager.deleteShop(shopName);
         shop.setShopName(newName);
-        getCommand().getPlugin().getPersistenceService().insertShop(shop);
+        getCommand().getPlugin().getPersistenceService().updateShop(shop);
         member.message("§7The '" + shopName + "' shop has been renamed to " + Chat.PRIM + newName + "§7.");
     }
 

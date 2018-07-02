@@ -3,7 +3,7 @@ package net.whitewalker.shopmanager.domain.commands.shop;
 import net.rayze.core.spigot.commands.base.SubCommand;
 import net.rayze.core.spigot.member.Member;
 
-public class OpenShopCommand extends SubCommand<ShopCommand> {
+class OpenShopCommand extends SubCommand<ShopCommand> {
 
     OpenShopCommand(ShopCommand command) {
         super(command, "Open a shop", "<shopname>", "sr_mod", "open");

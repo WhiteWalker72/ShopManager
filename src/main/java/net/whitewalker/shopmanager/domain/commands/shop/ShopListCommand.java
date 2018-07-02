@@ -8,7 +8,7 @@ import net.whitewalker.shopmanager.domain.components.Shop;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ShopListCommand extends SubCommand<ShopCommand> {
+class ShopListCommand extends SubCommand<ShopCommand> {
 
     ShopListCommand(ShopCommand command) {
         super(command, "Get a list of all the shops", "", "sr_mod", "list");

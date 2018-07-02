@@ -5,9 +5,9 @@ import net.rayze.core.spigot.member.Member;
 import net.whitewalker.shopmanager.domain.components.Shop;
 import net.whitewalker.shopmanager.domain.ui.SellShop;
 
-public class SellCommand extends SubCommand<ShopCommand> {
+class SellCommand extends SubCommand<ShopCommand> {
 
-    public SellCommand(ShopCommand command) {
+    SellCommand(ShopCommand command) {
         super(command, "Sell some items", "[shop]", "sr_mod", "sell");
     }
 

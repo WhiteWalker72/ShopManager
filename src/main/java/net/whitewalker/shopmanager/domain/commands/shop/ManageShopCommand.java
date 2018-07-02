@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 
-public class ManageShopCommand extends SubCommand<ShopCommand> {
+class ManageShopCommand extends SubCommand<ShopCommand> {
 
     ManageShopCommand(ShopCommand command) {
         super(command, "Manage shop items and categories", "<shopname>", "sr_mod", "manage");

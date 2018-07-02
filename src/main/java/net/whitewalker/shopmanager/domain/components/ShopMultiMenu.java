@@ -32,6 +32,16 @@ public class ShopMultiMenu extends ShopComponent implements IComponentContainer 
         return shopItems;
     }
 
+    public void addOrUpdateItem(ItemStack item, double cost) {
+        for (ShopComponent component : getComponents()) {
+            if (component.getItem().equals(item) && component instanceof ShopCategoryItem) {
+                ((ShopCategoryItem) component).setCost(cost);
+                return;
+            }
+        }
+        getComponents().add(new ShopCategoryItem(getComponents().size(), item, cost));
+    }
+
     @Override
     public void updateItems() {
         if (subMenu != null) {

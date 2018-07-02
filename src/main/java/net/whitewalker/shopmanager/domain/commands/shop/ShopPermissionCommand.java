@@ -6,7 +6,7 @@ import net.rayze.core.spigot.member.Member;
 import net.whitewalker.shopmanager.domain.components.Shop;
 import net.whitewalker.shopmanager.utils.Chat;
 
-public class ShopPermissionCommand extends SubCommand<ShopCommand> {
+class ShopPermissionCommand extends SubCommand<ShopCommand> {
 
     ShopPermissionCommand(ShopCommand command) {
         super(command, "Change the shop permission", "<shopname> <permission>", "sr_mod", "permission", "perm", "setperm", "setpermission");

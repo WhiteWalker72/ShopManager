@@ -25,6 +25,8 @@ public class ShopCommand extends Command {
         new SellCommand(this);
         new ShopListCommand(this);
         new ShopPermissionCommand(this);
+        new ShopRemoveItemsCommand(this);
+        new ShopUpdateCommand(this);
     }
 
     public boolean shopExistsTest(Member member, String shopName) {

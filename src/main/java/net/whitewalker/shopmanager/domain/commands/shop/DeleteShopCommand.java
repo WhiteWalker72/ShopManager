@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class DeleteShopCommand extends SubCommand<ShopCommand> {
+class DeleteShopCommand extends SubCommand<ShopCommand> {
 
     private final Set<UUID> confirmSet = new HashSet<>();
 
