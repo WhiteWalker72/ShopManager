@@ -39,7 +39,19 @@ public class ShopCategoryItem extends ShopComponent {
 
     @Override
     public ItemStack getItemWithShopLore() {
-        return new ItemBuilder(getItem().clone()).addLore("§7Left click for 1 for §6$" + getCost(),  "§7Middle click for 16 for §6$" + getCost(32), "§7Right click for 64 for §6$" + getCost(64)).build();
+        ItemBuilder builder = new ItemBuilder(getItem().clone());
+        builder.addLore("§7Left click for 1 for §6$" + getCost());
+        int max = 1000000;
+
+        double middleCost = getCost(32);
+        if (middleCost < max) {
+            builder.addLore("§7Middle click for 16 for §6$" + middleCost);
+            double rightCost = getCost(64);
+            if (rightCost < max) {
+                builder.addLore("§7Right click for 64 for §6$" + rightCost);
+            }
+        }
+        return builder.build();
     }
 
     @Override
@@ -57,6 +69,10 @@ public class ShopCategoryItem extends ShopComponent {
 
         int amount = clickType == ClickType.RIGHT ? 64 : clickType == ClickType.MIDDLE ? 32 : 1;
         double buyCost = getCost(amount);
+        if ((clickType == ClickType.RIGHT || clickType == ClickType.MIDDLE) && buyCost > 1000000) {
+            return false;
+        }
+
 
         IMoneyStrategy moneyStrategy = ShopServices.getInstance().getMoneyStrategy();
         if (!moneyStrategy.hasEnoughMoney(member.getPlayer(), buyCost)) {

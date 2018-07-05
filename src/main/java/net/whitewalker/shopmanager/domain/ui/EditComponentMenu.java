@@ -72,8 +72,7 @@ public class EditComponentMenu {
                 String name = meta.hasDisplayName() ? meta.getDisplayName() : ItemUtils.getName(component.getItem());
 
                 new AnvilGUI(member.getPlayer(), name, (player, reply) -> {
-                    meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', reply));
-                    component.getItem().setItemMeta(meta);
+                    component.setDisplayName(ChatColor.translateAlternateColorCodes('&', reply));
                     openMenu(member.getPlayer());
                     return reply;
                 }, subCloseStrategy);

@@ -52,14 +52,14 @@ public class ShopDAOMongoImpl extends DAOMongoImpl<Shop> {
         switch (typeName.toLowerCase()) {
             case "category item": {
                 double cost = doc.getDouble("cost");
-                return new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost/3);
+                return new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost/3).withDisplayName(doc.containsKey("display_name") ? doc.getString("display_name") : "");
             }
             case "category" : {
-                return new ShopCategory(index, item, getComponents(doc), doc.containsKey("menu_size") ? MenuSize.getSize(doc.getString("menu_size")) : MenuSize.THREE_LINE);
+                return new ShopCategory(index, item, getComponents(doc), doc.containsKey("menu_size") ? MenuSize.getSize(doc.getString("menu_size")) : MenuSize.THREE_LINE).withDisplayName(doc.containsKey("display_name") ? doc.getString("display_name") : "");
             }
 
             case "multimenu": {
-                return new ShopMultiMenu(index, item, getComponents(doc));
+                return new ShopMultiMenu(index, item, getComponents(doc)).withDisplayName(doc.containsKey("display_name") ? doc.getString("display_name") : "");
             }
         }
 
@@ -99,6 +99,9 @@ public class ShopDAOMongoImpl extends DAOMongoImpl<Shop> {
         Document compDoc = new Document("index", comp.getIndex());
         compDoc.put("type_name", comp.getTypeName());
         compDoc.put("item", ItemUtils.toDocument(comp.getItem()));
+        if (!comp.getDisplayName().isEmpty()) {
+            compDoc.put("display_name", comp.getDisplayName());
+        }
 
         if (comp instanceof ShopCategory) {
             ShopCategory shopComp = (ShopCategory) comp;

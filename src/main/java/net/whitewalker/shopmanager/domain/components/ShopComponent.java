@@ -15,11 +15,22 @@ public abstract class ShopComponent {
 
     private int index;
     private ItemStack item;
+    private String displayName;
     private Consumer<Player> closeStrategy;
 
     public ShopComponent(int index, ItemStack item) {
+        this(index, item, "");
+    }
+
+    public ShopComponent(int index, ItemStack item, String displayName) {
         this.index = index;
-        this.item = item;
+        this.displayName = displayName;
+        setItem(item);
+    }
+
+    public ShopComponent withDisplayName(String name) {
+        setDisplayName(name);
+        return this;
     }
 
     public Consumer<Player> getCloseStrategy() {
@@ -35,7 +46,7 @@ public abstract class ShopComponent {
     }
 
     public void setItem(ItemStack item) {
-        this.item = item;
+        this.item = !displayName.isEmpty() ? new ItemBuilder(item).setName(displayName).build() : item;
     }
 
     public int getIndex() {
@@ -46,11 +57,23 @@ public abstract class ShopComponent {
         return new ItemBuilder(getItem().clone()).addLore("§7Type: " + getTypeName()).build();
     }
 
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+        setItem(item);
+    }
+
     public String getName() {
+        if (displayName != null) {
+            return displayName;
+        }
         if (ItemUtils.hasDisplayName(getItem())) {
             return ChatColor.stripColor(getItem().getItemMeta().getDisplayName());
         }
         return null;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public abstract ItemStack getItemWithShopLore();
