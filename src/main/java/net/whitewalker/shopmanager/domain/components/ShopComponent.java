@@ -3,11 +3,13 @@ package net.whitewalker.shopmanager.domain.components;
 import net.rayze.core.spigot.member.Member;
 import net.rayze.core.spigot.utils.ItemBuilder;
 import net.rayze.core.spigot.utils.ItemUtils;
+import net.rayze.core.spigot.utils.ServerUtils;
 import net.whitewalker.shopmanager.domain.ui.EditComponentMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.function.Consumer;
 
@@ -16,6 +18,7 @@ public abstract class ShopComponent {
     private int index;
     private ItemStack item;
     private String displayName;
+    private String nbt;
     private Consumer<Player> closeStrategy;
 
     public ShopComponent(int index, ItemStack item) {
@@ -33,6 +36,11 @@ public abstract class ShopComponent {
         return this;
     }
 
+    public ShopComponent withNBT(String nbt) {
+        setNBT(nbt);
+        return this;
+    }
+
     public Consumer<Player> getCloseStrategy() {
         return closeStrategy;
     }
@@ -46,7 +54,19 @@ public abstract class ShopComponent {
     }
 
     public void setItem(ItemStack item) {
-        this.item = !displayName.isEmpty() ? new ItemBuilder(item).setName(displayName).build() : item;
+        if (!displayName.isEmpty()) {
+            if (nbt != null) {
+                ItemStack nbtItem = ServerUtils.NMS_HANDLER.setNBT(item, nbt);
+                ItemMeta meta = nbtItem.getItemMeta();
+                meta.setDisplayName(displayName);
+                nbtItem.setItemMeta(meta);
+                this.item = nbtItem;
+            } else {
+                this.item = new ItemBuilder(item).setName(displayName).build();
+            }
+            return;
+        }
+        this.item = nbt != null ? ServerUtils.NMS_HANDLER.setNBT(item, nbt) : item;
     }
 
     public int getIndex() {
@@ -62,6 +82,12 @@ public abstract class ShopComponent {
         setItem(item);
     }
 
+    public void setNBT(String nbt) {
+        this.nbt = nbt;
+        System.out.println(nbt);
+        setItem(item);
+    }
+
     public String getName() {
         if (displayName != null) {
             return displayName;
@@ -74,6 +100,10 @@ public abstract class ShopComponent {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getNBT() {
+        return nbt;
     }
 
     public abstract ItemStack getItemWithShopLore();

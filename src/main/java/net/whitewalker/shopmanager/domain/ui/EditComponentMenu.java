@@ -1,11 +1,13 @@
 package net.whitewalker.shopmanager.domain.ui;
 
 import net.rayze.core.spigot.member.Member;
-import net.rayze.core.spigot.menu.*;
+import net.rayze.core.spigot.menu.DynamicMenu;
+import net.rayze.core.spigot.menu.Menu;
+import net.rayze.core.spigot.menu.MenuSize;
+import net.rayze.core.spigot.menu.SimpleMenuElement;
 import net.rayze.core.spigot.menu.anvil.AnvilGUI;
 import net.rayze.core.spigot.utils.ItemBuilder;
 import net.rayze.core.spigot.utils.ItemUtils;
-import net.rayze.core.spigot.utils.ServerUtils;
 import net.whitewalker.shopmanager.domain.components.IComponentContainer;
 import net.whitewalker.shopmanager.domain.components.ShopComponent;
 import net.whitewalker.shopmanager.utils.Chat;
@@ -139,10 +141,11 @@ public class EditComponentMenu {
         menu.setElement(39, new SimpleMenuElement(new ItemBuilder(Material.ANVIL).setName(Chat.MENU_ITEM + "Item nbt").addLore(Chat.MENU_LORE_PRIM + "<Click> §fto set the item nbt").build()) {
             @Override
             public boolean onClick(Member member, ClickType click) {
-                String nbt = ServerUtils.NMS_HANDLER.getNBT(component.getItem());
+                String nbt = component.getNBT();
+                System.out.println(nbt);
 
                 new AnvilGUI(member.getPlayer(), nbt == null ? "NBT" : nbt, (player, reply) -> {
-                    component.setItem(ServerUtils.NMS_HANDLER.setNBT(component.getItem(), reply));
+                    component.setNBT(reply);
                     openMenu(member.getPlayer());
                     return reply;
                 }, subCloseStrategy);

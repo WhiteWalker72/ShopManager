@@ -48,23 +48,40 @@ public class ShopDAOMongoImpl extends DAOMongoImpl<Shop> {
         int index = doc.getInteger("index");
         ItemStack item = ItemUtils.fromDocument((Document) doc.get("item"));
 
+        ShopComponent component;
+
         String typeName = doc.getString("type_name");
         switch (typeName.toLowerCase()) {
             case "category item": {
                 double cost = doc.getDouble("cost");
-                return new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost/3).withDisplayName(doc.containsKey("display_name") ? doc.getString("display_name") : "");
+                component = new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost / 3);
+
+                break;
             }
             case "category" : {
-                return new ShopCategory(index, item, getComponents(doc), doc.containsKey("menu_size") ? MenuSize.getSize(doc.getString("menu_size")) : MenuSize.THREE_LINE).withDisplayName(doc.containsKey("display_name") ? doc.getString("display_name") : "");
+                component = new ShopCategory(index, item, getComponents(doc), doc.containsKey("menu_size") ? MenuSize.getSize(doc.getString("menu_size")) : MenuSize.THREE_LINE);
+                break;
             }
 
             case "multimenu": {
-                return new ShopMultiMenu(index, item, getComponents(doc)).withDisplayName(doc.containsKey("display_name") ? doc.getString("display_name") : "");
+                component = new ShopMultiMenu(index, item, getComponents(doc));
+                break;
+            }
+
+            default: {
+                double cost = doc.getDouble("cost");
+                component = new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost / 3);
             }
         }
 
-        double cost = doc.getDouble("cost");
-        return new ShopCategoryItem(index, item, cost, doc.containsValue("sellCost") ? doc.getDouble("sellCost") : cost/3);
+        if (doc.containsKey("display_name")) {
+            component.withDisplayName(doc.getString("display_name"));
+        }
+        if (doc.containsKey("nbt")) {
+            component.withNBT(doc.getString("nbt"));
+        }
+
+        return component;
     }
 
     private List<ShopComponent> getComponents(Document doc) {
@@ -101,6 +118,9 @@ public class ShopDAOMongoImpl extends DAOMongoImpl<Shop> {
         compDoc.put("item", ItemUtils.toDocument(comp.getItem()));
         if (!comp.getDisplayName().isEmpty()) {
             compDoc.put("display_name", comp.getDisplayName());
+        }
+        if (comp.getNBT() != null) {
+            compDoc.put("nbt", comp.getNBT());
         }
 
         if (comp instanceof ShopCategory) {

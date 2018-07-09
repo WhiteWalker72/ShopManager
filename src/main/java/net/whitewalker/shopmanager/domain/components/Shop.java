@@ -61,12 +61,12 @@ public class Shop implements IComponentContainer {
     private void addComponentToMaps(ShopComponent shopComponent) {
         if (shopComponent instanceof ShopCategoryItem) {
             ItemStack item = shopComponent.getItem();
-            buyValueMap.put(new Pair<>(item.getType(), item.getData().getData()), ((ShopCategoryItem) shopComponent).getSellValue());
+            buyValueMap.put(new Pair<>(item.getType(), item.getData().getData()), ((ShopCategoryItem) shopComponent).getCost());
             sellValueMap.put(new Pair<>(item.getType(), item.getData().getData()), ((ShopCategoryItem) shopComponent).getSellValue());
             return;
         }
-        if (shopComponent instanceof ShopCategory) {
-            for (ShopComponent component : ((ShopCategory) shopComponent).getComponents()) {
+        if (shopComponent instanceof IComponentContainer) {
+            for (ShopComponent component : ((IComponentContainer) shopComponent).getComponents()) {
                 addComponentToMaps(component);
             }
         }
@@ -106,13 +106,14 @@ public class Shop implements IComponentContainer {
 
     public Double getBuyValue(Material material, byte data) {
         for (Map.Entry<Pair<Material, Byte>, Double> entry : buyValueMap.entrySet()) {
-            if (entry.getKey().getLeft().equals(material) && entry.getKey().getRight().equals(data))
+            if (entry.getKey().getLeft().equals(material) && entry.getKey().getRight().equals(data)) {
                 return entry.getValue();
+            }
         }
-        return 0.0;
+        return null;
     }
 
-    public Double getSellValue(Material material, byte data) {
+    public double getSellValue(Material material, byte data) {
         for (Map.Entry<Pair<Material, Byte>, Double> entry : sellValueMap.entrySet()) {
             if (entry.getKey().getLeft().equals(material) && entry.getKey().getRight().equals(data))
                 return entry.getValue();
