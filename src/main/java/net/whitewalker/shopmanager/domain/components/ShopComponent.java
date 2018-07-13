@@ -89,7 +89,7 @@ public abstract class ShopComponent {
     }
 
     public String getName() {
-        if (displayName != null) {
+        if (displayName != null && !displayName.isEmpty()) {
             return displayName;
         }
         if (ItemUtils.hasDisplayName(getItem())) {
