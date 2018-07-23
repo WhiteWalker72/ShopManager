@@ -142,7 +142,6 @@ public class EditComponentMenu {
             @Override
             public boolean onClick(Member member, ClickType click) {
                 String nbt = component.getNBT();
-                System.out.println(nbt);
 
                 new AnvilGUI(member.getPlayer(), nbt == null ? "NBT" : nbt, (player, reply) -> {
                     component.setNBT(reply);

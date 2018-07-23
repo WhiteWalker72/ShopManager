@@ -26,6 +26,7 @@ public class ShopCommand extends Command {
         new ShopListCommand(this);
         new ShopPermissionCommand(this);
         new ShopRemoveItemsCommand(this);
+
         new ShopUpdateCommand(this);
     }
 

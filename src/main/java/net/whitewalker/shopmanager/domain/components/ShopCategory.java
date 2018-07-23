@@ -68,6 +68,7 @@ public class ShopCategory extends ShopComponent implements IComponentContainer {
             subMenu.destroy();
         }
         subMenu = new Menu(title, menuSize);
+
         Consumer<Player> subCloseStrategy = pl -> subMenu.open(pl);
 
         categoryItems.stream().filter(ShopComponent::isValidComponent).forEach(shopComponent -> {
